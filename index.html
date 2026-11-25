@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>你写的字体，暴露了你的什么性格？</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: linear-gradient(135deg, #f5f0e8 0%, #e8e0d5 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    padding: 24px 16px;
+    color: #2c2c2c;
+  }
+  .app {
+    width: 100%;
+    max-width: 640px;
+  }
+  .card {
+    background: #fffdf9;
+    border-radius: 20px;
+    padding: 32px 28px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+  h1 {
+    font-size: 24px;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .subtitle {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+  .progress {
+    height: 6px;
+    background: #eee8df;
+    border-radius: 3px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #c9a96e, #a8834a);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+  .q-index {
+    font-size: 13px;
+    color: #a8834a;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+  }
+  .q-text {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 14px 18px;
+    font-size: 15px;
+    line-height: 1.5;
+    background: #faf7f2;
+    border: 1.5px solid #e8e0d5;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #2c2c2c;
+    font-family: inherit;
+  }
+  .option:hover {
+    background: #f3ece2;
+    border-color: #c9a96e;
+    transform: translateX(2px);
+  }
+  .option.selected {
+    background: #f0e6d6;
+    border-color: #a8834a;
+  }
+  .btn {
+    display: inline-block;
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #b8955e, #8f6b3a);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 24px;
+    font-family: inherit;
+    transition: opacity 0.2s;
+  }
+  .btn:hover { opacity: 0.9; }
+  .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .result {
+    text-align: center;
+  }
+  .result-badge {
+    display: inline-block;
+    padding: 6px 18px;
+    background: #f0e6d6;
+    color: #8f6b3a;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+  }
+  .result-title {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .result-desc {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #555;
+    text-align: left;
+    margin-bottom: 20px;
+  }
+  .result-meta {
+    background: #faf7f2;
+    border-radius: 14px;
+    padding: 18px;
+    margin-bottom: 20px;
+    text-align: left;
+  }
+  .result-meta p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #666;
+  }
+  .result-meta strong {
+    color: #2c2c2c;
+  }
+  .share-card {
+    background: linear-gradient(135deg, #2c2c2c, #4a4a4a);
+    color: #f5f0e8;
+    border-radius: 14px;
+    padding: 24px;
+    font-size: 17px;
+    line-height: 1.6;
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+  .share-label {
+    font-size: 12px;
+    color: #a8834a;
+    margin-bottom: 8px;
+    font-style: normal;
+    letter-spacing: 1px;
+  }
+  .restart {
+    background: transparent;
+    color: #8f6b3a;
+    border: 1.5px solid #c9a96e;
+    margin-top: 8px;
+  }
+  .restart:hover { background: #faf7f2; }
+  .score-tip {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 12px;
+  }
+  .attempt-tip {
+    font-size: 12px;
+    color: #b8955e;
+    margin-top: 16px;
+    text-align: center;
+  }
+  .blocked-card {
+    text-align: center;
+    padding: 40px 24px;
+  }
+  .blocked-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="card" id="app"></div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    q: "你平时手写时，字迹整体偏哪种？",
+    options: [
+      { text: "工整方正，一笔一画清楚", score: 1 },
+      { text: "圆润可爱，带点卡通感", score: 2 },
+      { text: "瘦长连笔，写得快", score: 3 },
+      { text: "大小不一，随性潦草", score: 4 }
+    ]
+  },
+  {
+    q: "写英文时，你更喜欢哪种风格？",
+    options: [
+      { text: "标准印刷体，干净利落", score: 1 },
+      { text: "圆体/花体，带装饰", score: 2 },
+      { text: "全大写，简洁有力", score: 3 },
+      { text: "随手连写，能看懂就行", score: 4 }
+    ]
+  },
+  {
+    q: "如果让你设计自己的签名，你会？",
+    options: [
+      { text: "规规矩矩写全名", score: 1 },
+      { text: "加小爱心或小图案", score: 2 },
+      { text: "一笔连成，有速度感", score: 3 },
+      { text: "随便划拉，认得出就行", score: 4 }
+    ]
+  },
+  {
+    q: "你发消息时，标点习惯是？",
+    options: [
+      { text: "标点齐全，句号不落", score: 1 },
+      { text: "爱用波浪号～和颜文字", score: 2 },
+      { text: "很少标点，空格断句", score: 3 },
+      { text: "感叹号很多！！！", score: 4 }
+    ]
+  },
+  {
+    q: "看到别人字写得好看，你第一反应是？",
+    options: [
+      { text: "想模仿，练成一样", score: 1 },
+      { text: "好可爱，想学这种风格", score: 2 },
+      { text: "欣赏那种潇洒连笔", score: 3 },
+      { text: "无所谓，字能认就行", score: 4 }
+    ]
+  },
+  {
+    q: "你写字时最常出现的状态是？",
+    options: [
+      { text: "慢慢写，尽量不出错", score: 1 },
+      { text: "边写边加点小装饰", score: 2 },
+      { text: "越写越快，连笔飞起", score: 3 },
+      { text: "写着写着就飘了", score: 4 }
+    ]
+  }
+];
+
+const RESULTS = [
+  {
+    min: 6, max: 9,
+    badge: "印刷体人格",
+    title: "秩序型",
+    desc: "你写字像排版，做人也有自己的规矩。你重视清晰、准确和可预期，做事有条理，不喜欢临时变卦。别人觉得你靠谱，但你可能有点容易给自己压力。适合做需要耐心和细节的事。",
+    keywords: "方正、工整、留白均匀",
+    tags: "严谨 / 可靠 / 轻微完美主义",
+    share: "我的字像打印，我的人像计划表。"
+  },
+  {
+    min: 10, max: 13,
+    badge: "圆体人格",
+    title: "温柔型",
+    desc: "你的字带点圆润和亲和力，像你给人的感觉：好接近、不尖锐。你注重关系里的舒适感，愿意照顾别人的情绪，但也容易把话憋在心里。你适合有温度、有审美的表达方式。",
+    keywords: "圆润、可爱、带小装饰",
+    tags: "温柔 / 体贴 / 有点小浪漫",
+    share: "字是圆的，心是软的。"
+  },
+  {
+    min: 14, max: 17,
+    badge: "连笔人格",
+    title: "效率型",
+    desc: "你写字追求速度和流畅，脑子常常比手快。你反应快、适应力强，不喜欢被繁琐规则拖住。优点是利落，缺点是偶尔显得急。你适合快节奏、能自主安排的工作。",
+    keywords: "瘦长、连笔、节奏感强",
+    tags: "敏捷 / 独立 / 讨厌拖沓",
+    share: "手在飞，脑子更快。"
+  },
+  {
+    min: 18, max: 21,
+    badge: "涂鸦人格",
+    title: "自由型",
+    desc: "你的字不太受格子约束，大小错落，像你的思维一样跳脱。你随性、有创意，不喜欢被定义，但有时也会因为太自由而难以收尾。你适合有弹性、能发挥个性的场景。",
+    keywords: "随性、大小不一、有个人痕迹",
+    tags: "自由 / 创意 / 反套路",
+    share: "格子关不住我的字。"
+  },
+  {
+    min: 22, max: 24,
+    badge: "狂草人格",
+    title: "爆发型",
+    desc: "你的字带着一股“先写再说”的冲劲，情绪和想法都写在纸上。你直率、有行动力，不太藏得住感受。优点是真实有感染力，缺点是容易冲动。你适合能表达自我、有挑战性的环境。",
+    keywords: "潦草、有力、速度感强",
+    tags: "直率 / 热情 / 行动派",
+    share: "先写，认不认得出再说。"
+  }
+];
+
+// ===== 次数限制配置 =====
+const ATTEMPT_KEY = "font_test_attempts";
+const MAX_ATTEMPTS = 2;
+
+function getAttempts() {
+  return parseInt(localStorage.getItem(ATTEMPT_KEY) || "0", 10);
+}
+
+function addAttempt() {
+  const n = getAttempts() + 1;
+  localStorage.setItem(ATTEMPT_KEY, String(n));
+  return n;
+}
+
+function canStart() {
+  return getAttempts() < MAX_ATTEMPTS;
+}
+
+// ===== 主逻辑 =====
+const app = document.getElementById("app");
+let current = 0;
+let answers = [];
+
+function renderBlocked() {
+  app.innerHTML = `
+    <div class="blocked-card">
+      <div class="blocked-icon">🔒</div>
+      <div class="result-badge">次数已用完</div>
+      <div class="result-title">本测试限做 ${MAX_ATTEMPTS} 次</div>
+      <div class="result-desc" style="text-align:center;">
+        你已用完 ${MAX_ATTEMPTS} 次测试机会。<br>
+        如需再次测试，请联系卖家。
+      </div>
+    </div>
+  `;
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[current];
+  const progress = (current / QUESTIONS.length) * 100;
+
+  app.innerHTML = `
+    <div class="progress"><div class="progress-bar" style="width:${progress}%"></div></div>
+    <div class="q-index">第 ${current + 1} / ${QUESTIONS.length} 题</div>
+    <div class="q-text">${q.q}</div>
+    <div class="options">
+      ${q.options.map((opt, i) => `
+        <button class="option" data-score="${opt.score}" data-index="${i}">${opt.text}</button>
+      `).join("")}
+    </div>
+    <div class="attempt-tip">本测试限做 ${MAX_ATTEMPTS} 次，当前为第 ${getAttempts() + 1} 次</div>
+  `;
+
+  app.querySelectorAll(".option").forEach(btn => {
+    btn.addEventListener("click", () => {
+      app.querySelectorAll(".option").forEach(b => b.classList.remove("selected"));
+      btn.classList.add("selected");
+      answers[current] = parseInt(btn.dataset.score, 10);
+
+      // 第一题第一次作答时，计入一次测试
+      if (current === 0) {
+        addAttempt();
+      }
+
+      setTimeout(() => {
+        if (current < QUESTIONS.length - 1) {
+          current++;
+          renderQuestion();
+        } else {
+          renderResult();
+        }
+      }, 220);
+    });
+  });
+}
+
+function getResult(score) {
+  return RESULTS.find(r => score >= r.min && score <= r.max);
+}
+
+function renderResult() {
+  const total = answers.reduce((a, b) => a + b, 0);
+  const result = getResult(total);
+  const used = getAttempts();
+  const remaining = Math.max(0, MAX_ATTEMPTS - used);
+
+  const restartBtn = remaining > 0
+    ? `<button class="btn restart" onclick="restart()">再测一次（剩余 ${remaining} 次）</button>`
+    : `<button class="btn restart" disabled>次数已用完</button>`;
+
+  app.innerHTML = `
+    <div class="result">
+      <div class="result-badge">${result.badge}</div>
+      <div class="result-title">${result.title}</div>
+      <div class="result-desc">${result.desc}</div>
+      <div class="result-meta">
+        <p><strong>字体关键词：</strong>${result.keywords}</p>
+        <p><strong>性格标签：</strong>${result.tags}</p>
+        <p><strong>你的得分：</strong>${total} / 24</p>
+      </div>
+      <div class="share-card">
+        <div class="share-label">你的字体人格宣言</div>
+        “${result.share}”
+      </div>
+      ${restartBtn}
+      <div class="score-tip">结果仅供娱乐，字体只是性格的一小部分线索。</div>
+    </div>
+  `;
+}
+
+function restart() {
+  if (!canStart()) {
+    renderBlocked();
+    return;
+  }
+  current = 0;
+  answers = [];
+  renderQuestion();
+}
+
+// 入口：先检查次数
+if (canStart()) {
+  renderQuestion();
+} else {
+  renderBlocked();
+}
+</script>
+</body>
+</html>
